@@ -1,0 +1,46 @@
+---
+import type { Props } from "@astrojs/starlight/props";
+import StarlightHead from "@astrojs/starlight/components/Head.astro";
+import VtbotStarlight from "astro-vtbot/components/starlight/Base.astro";
+import LoadingIndicator from "astro-vtbot/components/LoadingIndicator.astro";
+import { fade } from "astro:transitions";
+
+const ogImageUrl = new URL(
+  `/og/${Astro.props.id.replace(/\.\w+$/, ".png")}`,
+  Astro.site
+);
+---
+
+<VtbotStarlight
+  {...Astro.props}
+  transition:name="main"
+  transition:animate={fade({ duration: 50 })}
+>
+  <StarlightHead {...Astro.props}><slot /></StarlightHead>
+</VtbotStarlight>
+<LoadingIndicator top="80px" right="16px" src="/favicon.ico" />
+
+<style is:global>
+  ::view-transition-group(root) {
+    animation-duration: 300ms;
+  }
+
+  ::view-transition-group(main) {
+    overflow: hidden;
+  }
+
+  .main-pane {
+    overflow: hidden;
+  }
+
+  main h1 {
+    view-transition-name: title-heading;
+  }
+
+  ::view-transition-group(title-heading) {
+    animation-duration: 0.3s;
+  }
+</style>
+
+<meta property="og:image" content={ogImageUrl} />
+<meta name="twitter:image" content={ogImageUrl} />

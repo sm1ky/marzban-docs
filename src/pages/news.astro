@@ -1,0 +1,40 @@
+---
+import { spawnSync } from 'node:child_process';
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+
+const separator = '~~~~~~~~~~';
+const result = spawnSync(
+  'git',
+  ['log', `--format=${separator}%n%ct%n%s`, '--name-only', 'src/content/docs/**'],
+  { encoding: 'utf-8' }
+);
+
+const log = result.stdout
+  .split(separator)
+  .filter(Boolean)
+  .map((logEntry) => logEntry.split('\n').filter(Boolean))
+  .map(([timestamp, message, ...files]) => ({
+    date: new Date(parseInt(timestamp) * 1000),
+    message,
+    files: files.map((path) => path.replace('src/content/docs/', '')),
+  }))
+  .filter(({ files }) => files.length);
+
+---
+
+<StarlightPage frontmatter={{ title: 'Обновления документации' }}>
+  <ul>
+    {
+      log.map((entry) => (
+        <li>
+          {entry.date.toLocaleDateString('en', { dateStyle: 'medium' })}: {entry.message}
+          <ul>
+            {entry.files.map((path) => (
+              <li>{path}</li>
+            ))}
+          </ul>
+        </li>
+      ))
+    }
+  </ul>
+</StarlightPage>
