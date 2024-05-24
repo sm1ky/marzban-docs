@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  app:
+    image: node:18
+    working_dir: /app
+    volumes:
+      - .:/app
+    ports:
+      - "4321:4321"
+    command: npm run astro dev -- --host 0.0.0.0
+    environment:
+      - NODE_ENV=development
