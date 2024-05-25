@@ -1,27 +1,27 @@
 name: Deploy Astro with GitHub Pages
 
 on:
-  # Runs on pushes targeting the default branch
+  # Запускается при пушах в основную ветку
   push:
     branches: ["master"]
 
-  # Allows you to run this workflow manually from the Actions tab
+  # Позволяет запускать этот workflow вручную из вкладки Actions
   workflow_dispatch:
 
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+# Устанавливает разрешения для GITHUB_TOKEN, чтобы разрешить деплой на GitHub Pages
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+# Разрешает только один одновременный деплой, пропуская запуски, которые находятся в очереди между запущенными и последними поставленными в очередь.
+# Однако НЕ отменяет запуски в процессе, так как мы хотим позволить этим производственным деплойментам завершиться.
 concurrency:
   group: "pages"
   cancel-in-progress: false
 
 jobs:
-  # Build job
+  # Задача сборки
   build:
     runs-on: ubuntu-latest
     steps:
@@ -31,7 +31,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '16'  # Specify the Node.js version you need
+          node-version: 'lts/*'  # Устанавливает последнюю версию Node.js
 
       - name: Install dependencies
         run: npm install
@@ -42,9 +42,9 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: dist  # Specify the output directory for your build
+          path: dist  # Указываем выходную директорию для сборки
 
-  # Deployment job
+  # Задача деплоя
   deploy:
     environment:
       name: github-pages
