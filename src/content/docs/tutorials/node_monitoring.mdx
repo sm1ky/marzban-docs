@@ -1,0 +1,75 @@
+---
+title: Мониторинг узлов
+description: Установка Marzban Node Monitor
+
+---
+
+Marzban Node Monitor — это микросервис для автоматического мониторинга и управления состоянием нод в системе Marzban. Он регулярно проверяет статус всех нод, перезапускает их при обнаружении проблем и отправляет уведомления в Telegram, что позволяет оперативно реагировать на любые сбои в работе системы.
+
+Для установки нам потребуется:
+Marzban Node Monitor, Redis и Telegram Bot
+
+Устанавливаем Marzban Node Monitor
+Клонируем репозиторий и проваливаемся в неё:
+```bash
+git clone https://github.com/sm1ky/marzban-node-monitor.git
+cd marzban-node-monitor
+```
+
+Создаем файл .env и добавляем в него следующие переменные окружения:
+```bash
+nano .env
+```
+
+
+```
+MARZBAN_BASE_URL=https://your-marzban-instance.com/api
+MARZBAN_USERNAME=your_username
+MARZBAN_PASSWORD=your_password
+TELEGRAM_TOKEN=your_telegram_bot_token
+TELEGRAM_CHAT_ID=your_telegram_chat_id
+REDIS_HOST=127.0.0.1
+REDIS_PORT=6379
+REDIS_DB=1
+REDIS_PASSWORD=PASSWORD
+```
+
+Устанавливаем Redis
+```bash
+sudo apt update
+sudo apt install redis-server
+```
+
+Проверяем, что Redis успешно установлен и запущен
+```bash
+sudo systemctl status redis-server
+```
+
+Настраиваем Redis на автоматический запуск при загрузке системы
+```bash
+sudo systemctl enable redis-server
+```
+
+Устанавливаем пароль на базу данных Redis
+Переходим в параметры конфигурации Redis
+```bash
+nano /etc/redis/redis.conf
+```
+
+Находим строку # requirepass foobared  и убираем # и ставим свой пароль вместо foobared
+Сохраняем изменения и выходим из редактора:
+В nano нажмите Ctrl + O, затем Enter, чтобы сохранить файл, и Ctrl + X, чтобы выйти.
+
+Перезапускам Redis, чтобы изменения вступили в силу:
+```bash
+sudo systemctl restart redis-server
+```
+
+Запускаем Docker-контейнер:
+```bash
+docker-compose up --build
+```
+или
+```bash
+docker compose up --build
+```
