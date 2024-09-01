@@ -1,75 +1,60 @@
 ---
-title: Мониторинг узлов
+
+title: Мониторинг узлов  
 description: Установка Marzban Node Monitor
 
 ---
 
-Marzban Node Monitor — это микросервис для автоматического мониторинга и управления состоянием нод в системе Marzban. Он регулярно проверяет статус всех нод, перезапускает их при обнаружении проблем и отправляет уведомления в Telegram, что позволяет оперативно реагировать на любые сбои в работе системы.
+Marzban Node Monitor — это микросервис для автоматического мониторинга и управления состоянием нод в системе Marzban. Он регулярно проверяет статус всех нод, перезапускает их при обнаружении проблем и отправляет уведомления в Telegram, что позволяет оперативно реагировать на любые сбои в работе системы.
 
-Для установки нам потребуется:
-Marzban Node Monitor, Redis и Telegram Bot
+Для установки потребуется:
 
-Устанавливаем Marzban Node Monitor
-Клонируем репозиторий и проваливаемся в неё:
-```bash
-git clone https://github.com/sm1ky/marzban-node-monitor.git
-cd marzban-node-monitor
-```
+- Marzban Node Monitor
+- Redis
+- Telegram Bot
 
-Создаем файл .env и добавляем в него следующие переменные окружения:
-```bash
-nano .env
-```
+Установка Marzban Node Monitor
 
+1. **Клонируем репозиторий и переходим в директорию проекта:**
+   ```bash
+   git clone https://github.com/sm1ky/marzban-node-monitor.git
+   cd marzban-node-monitor
+   ```
 
-```
-MARZBAN_BASE_URL=https://your-marzban-instance.com/api
-MARZBAN_USERNAME=your_username
-MARZBAN_PASSWORD=your_password
-TELEGRAM_TOKEN=your_telegram_bot_token
-TELEGRAM_CHAT_ID=your_telegram_chat_id
-REDIS_HOST=127.0.0.1
-REDIS_PORT=6379
-REDIS_DB=1
-REDIS_PASSWORD=PASSWORD
-```
+2. **Создаем файл `.env` и добавляем в него следующие переменные окружения:**
+   ```bash
+   nano .env
+   ```
+   ```bash
+   MARZBAN_BASE_URL=https://your-marzban-instance.com/api
+   MARZBAN_USERNAME=your_username
+   MARZBAN_PASSWORD=your_password
+   TELEGRAM_TOKEN=your_telegram_bot_token
+   TELEGRAM_CHAT_ID=your_telegram_chat_id
+   REDIS_HOST=redis
+   REDIS_PORT=6379
+   REDIS_DB=1
+   REDIS_PASSWORD=PASSWORD
+   ```
 
-Устанавливаем Redis
-```bash
-sudo apt update
-sudo apt install redis-server
-```
+3. **Запуск Docker-контейнеров:**
+   Перед запуском убедитесь, что сеть Docker создана:
+   ```bash
+   docker network create marzban_network
+   ```
 
-Проверяем, что Redis успешно установлен и запущен
-```bash
-sudo systemctl status redis-server
-```
+   Запускаем Docker-контейнеры:
+   ```bash
+   docker compose up -d
+   ```
 
-Настраиваем Redis на автоматический запуск при загрузке системы
-```bash
-sudo systemctl enable redis-server
-```
+4. **Обновление скрипта:**
+   Для обновления скрипта после внесения изменений в репозиторий выполните команду:
+   ```bash
+   git pull origin production && docker compose up -d
+   ```
 
-Устанавливаем пароль на базу данных Redis
-Переходим в параметры конфигурации Redis
-```bash
-nano /etc/redis/redis.conf
-```
+Разработчик
 
-Находим строку # requirepass foobared  и убираем # и ставим свой пароль вместо foobared
-Сохраняем изменения и выходим из редактора:
-В nano нажмите Ctrl + O, затем Enter, чтобы сохранить файл, и Ctrl + X, чтобы выйти.
-
-Перезапускам Redis, чтобы изменения вступили в силу:
-```bash
-sudo systemctl restart redis-server
-```
-
-Запускаем Docker-контейнер:
-```bash
-docker-compose up --build
-```
-или
-```bash
-docker compose up --build
-```
+- **Имя:** Artem
+- **Связь:** [dev@sm1ky.com](mailto:dev@sm1ky.com) | [Telegram](https://t.me/forests_vpn)
