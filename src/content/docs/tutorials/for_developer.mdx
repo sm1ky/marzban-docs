@@ -23,34 +23,156 @@ Marzban API — это мощная асинхронная Python-библиот
 pip install marzban
 ```
 
-## Быстрый старт
-<Steps>
-1. Импортируйте библиотеку и настройте клиент:
-    ```python
-    from marzban import MarzbanAPIClient
+## Подключение к API
 
-    client = MarzbanAPIClient(base_url="http://your-marzban-url", token="your_api_token")
-    ```
-2. Получите список пользователей:
+### Прямое подключение
+<Steps>
+1. Создайте API-клиент:
     ```python
-    users = await client.get_users()
-    print(users)
-    ```
-3. Добавьте нового пользователя:
-    ```python
-    user_data = {
-        "username": "new_user",
-        "password": "secure_password"
-    }
-    new_user = await client.create_user(user_data)
-    print(new_user)
-    ```
-4. Управляйте узлами:
-    ```python
-    nodes = await client.get_nodes()
-    print(nodes)
+    from marzban import MarzbanAPI
+    api = MarzbanAPI(base_url="http://marzban-api.com")
     ```
 </Steps>
+
+### Подключение через SSH-туннель
+<Steps>
+1. Настройте туннель для подключения:
+    ```python
+    api = MarzbanAPI(
+        base_url="http://127.0.0.1",
+        ssh_username='root', #Если используете SSH подключение
+        ssh_host='99.240.220.100', #Если используете SSH подключение
+        ssh_port=22, #Если используете SSH подключение 
+        ssh_private_key_path='C:/Users/User/.ssh/id_rsa', #Если используете SSH подключение
+        ssh_key_passphrase='sshpassphrase', #Если используете SSH подключение 
+        local_bind_host='127.0.0.1', #Если используете SSH подключение
+        local_bind_port=8020, #Если используете SSH подключение
+        remote_bind_host='127.0.0.1', #Если используете SSH подключение
+        remote_bind_port=8000 #Если используете SSH подключение
+    )
+    ```
+</Steps>
+
+## Получение токена администратора
+
+```python
+token = await api.get_token(username="admin", password="admin")
+```
+
+## Управление администраторами
+
+<Steps>
+1. Получение текущего администратора:
+    ```python
+    current_admin = await api.get_current_admin(token=token.access_token)
+    print("Текущий администратор:", current_admin)
+    ```
+
+2. Создание нового администратора:
+    ```python
+    new_admin = AdminCreate(username="admin2", is_sudo=False, password="new_password")
+    created_admin = await api.create_admin(admin=new_admin, token=token.access_token)
+    print("Создан администратор:", created_admin)
+    ```
+
+3. Изменение администратора:
+    ```python
+    modified_admin = await api.modify_admin(username="admin2", admin=AdminModify(password="new_password2"), token=token.access_token)
+    print("Изменён администратор:", modified_admin)
+    ```
+
+4. Удаление администратора:
+    ```python
+    await api.remove_admin(username="admin2", token=token.access_token)
+    print("Администратор удалён.")
+    ```
+
+5. Получение списка администраторов:
+    ```python
+    admins = await api.get_admins(token=token.access_token, offset=0, limit=10)
+    print("Администраторы:", admins)
+    ```
+</Steps>
+
+## Управление пользователями
+
+<Steps>
+1. Добавление нового пользователя:
+    ```python
+    new_user = UserCreate(username="new_user", proxies={"vless": ProxySettings(flow="xtls-rprx-vision")})
+    added_user = await api.add_user(user=new_user, token=token.access_token)
+    print("Добавленный пользователь:", added_user)
+    ```
+
+2. Получение информации о пользователе:
+    ```python
+    user_info = await api.get_user(username="new_user", token=token.access_token)
+    print("Информация о пользователе:", user_info)
+    ```
+
+3. Изменение пользователя:
+    ```python
+    modified_user = await api.modify_user(username="new_user", user=UserModify(data_limit=1073741824), token=token.access_token)
+    print("Изменён пользователь:", modified_user)
+    ```
+
+4. Удаление пользователя:
+    ```python
+    await api.remove_user(username="new_user", token=token.access_token)
+    print("Пользователь удалён.")
+    ```
+</Steps>
+
+## Управление узлами
+
+<Steps>
+1. Добавление нового узла:
+    ```python
+    new_node = NodeCreate(name="Node1", address="192.168.1.1")
+    added_node = await api.add_node(node=new_node, token=token.access_token)
+    print("Добавленный узел:", added_node)
+    ```
+
+2. Получение информации об узле:
+    ```python
+    node_info = await api.get_node(node_id=added_node.id, token=token.access_token)
+    print("Информация об узле:", node_info)
+    ```
+
+3. Изменение узла:
+    ```python
+    modified_node = await api.modify_node(node_id=added_node.id, node=NodeModify(name="Node1_Updated"), token=token.access_token)
+    print("Изменён узел:", modified_node)
+    ```
+
+4. Удаление узла:
+    ```python
+    await api.remove_node(node_id=added_node.id, token=token.access_token)
+    print("Узел удалён.")
+    ```
+</Steps>
+
+## Системная статистика
+
+<Steps>
+1. Получение статистики системы:
+    ```python
+    system_stats = await api.get_system_stats(token=token.access_token)
+    print("Системная статистика:", system_stats)
+    ```
+
+2. Получение использования данных:
+    ```python
+    user_usage = await api.get_user_usage(username="new_user", token=token.access_token, start="2023-01-01", end="2023-12-31")
+    print("Использование данных:", user_usage)
+    ```
+</Steps>
+
+## Закрытие API-клиента
+
+```python
+await api.close()
+```
 
 ## Полезные ссылки
 - **PyPI**: [marzban](https://pypi.org/project/marzban/)
