@@ -1,0 +1,69 @@
+
+---
+title: Использование Marzban API
+description: Руководство по интеграции и использованию Marzban API для управления вашими сервисами.
+---
+import { Steps } from '@astrojs/starlight/components';
+
+Marzban API — это мощная асинхронная Python-библиотека для управления пользователями, администраторами, узлами и статистикой в Marzban. API идеально подходит для автоматизации и интеграции в ваши проекты.
+
+[![Stars](https://img.shields.io/github/stars/sm1ky/marzban_api.svg?style=social)](https://github.com/sm1ky/marzban_api/stargazers)
+[![Forks](https://img.shields.io/github/forks/sm1ky/marzban_api.svg?style=social)](https://github.com/sm1ky/marzban_api/network/members)
+[![Issues](https://img.shields.io/github/issues/sm1ky/marzban_api.svg)](https://github.com/sm1ky/marzban_api/issues)
+[![PyPi Package Version](https://img.shields.io/pypi/v/marzban)](https://pypi.python.org/pypi/marzban)
+
+:::note
+Подробная документация доступна на [GitHub](https://github.com/sm1ky/marzban_api).
+:::
+
+## Установка библиотеки
+
+Для начала работы с Marzban API выполните установку последней версии:
+
+```bash
+pip install marzban
+```
+
+## Быстрый старт
+<Steps>
+1. Импортируйте библиотеку и настройте клиент:
+    ```python
+    from marzban import MarzbanAPIClient
+
+    client = MarzbanAPIClient(base_url="http://your-marzban-url", token="your_api_token")
+    ```
+2. Получите список пользователей:
+    ```python
+    users = await client.get_users()
+    print(users)
+    ```
+3. Добавьте нового пользователя:
+    ```python
+    user_data = {
+        "username": "new_user",
+        "password": "secure_password"
+    }
+    new_user = await client.create_user(user_data)
+    print(new_user)
+    ```
+4. Управляйте узлами:
+    ```python
+    nodes = await client.get_nodes()
+    print(nodes)
+    ```
+</Steps>
+
+## Полезные ссылки
+- **PyPI**: [marzban](https://pypi.org/project/marzban/)
+- **GitHub Repository**: [marzban_api](https://github.com/sm1ky/marzban_api)
+
+## Конtributing
+Мы всегда рады вашим предложениям и улучшениям. Если вы хотите помочь, откройте [Issue](https://github.com/sm1ky/marzban_api/issues) или создайте Pull Request (PR).
+
+## Лицензия
+Этот проект распространяется под лицензией MIT. Подробнее в [LICENSE](https://github.com/sm1ky/marzban_api/blob/production/LICENSE).
+
+## Поддержка
+Если у вас есть вопросы или предложения, свяжитесь с нами:
+- **Email**: [contact@sm1ky.com](mailto:contact@sm1ky.com)
+- **Telegram**: [@sm1ky](https://t.me/sm1ky)
